@@ -421,7 +421,7 @@ fn cunion_to_rs(ctx: &mut GenCtx, name: ~str, fields: ~[@FieldInfo]) -> ~[@ast::
                   attrs: ~[],
                   id: ctx.ext_cx.next_id(),
                   node: item,
-                  vis: ast::public,
+                  vis: ast::inherited,
                   span: dummy_sp()
                };
     }
