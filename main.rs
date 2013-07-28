@@ -10,6 +10,7 @@ use gen::*;
 
 struct BindGenCtx {
     match_pat: ~[~str],
+    abi: ~str,
     builtins: bool,
     link: Option<~str>,
     out: @io::Writer,
@@ -32,6 +33,7 @@ fn parse_args(args: &[~str]) -> ParseResult {
     let mut out = io::stdout();
     let mut pat = ~[];
     let mut link = None;
+    let mut abi = ~"C";
     let mut builtins = false;
 
     if args_len == 0u {
@@ -73,6 +75,10 @@ fn parse_args(args: &[~str]) -> ParseResult {
                 builtins = true;
                 ix += 1u;
             }
+            ~"-abi" => {
+                abi = copy args[ix + 1u];
+                ix += 2u;
+            }
             _ => {
                 clang_args.push(copy args[ix]);
                 ix += 1u;
@@ -81,6 +87,7 @@ fn parse_args(args: &[~str]) -> ParseResult {
     }
 
     let ctx = @mut BindGenCtx { match_pat: pat,
+                                abi: abi,
                                 builtins: builtins,
                                 link: link,
                                 out: out,
@@ -493,7 +500,7 @@ fn main() {
                 c.visit(|cur, parent| visit_top(cur, parent, ctx));
             }
 
-            gen_rs(ctx.out, &ctx.link, ctx.globals);
+            gen_rs(ctx.out, copy ctx.abi, &ctx.link, ctx.globals);
 
             unit.dispose();
             ix.dispose();
