@@ -137,6 +137,7 @@ fn match_pattern(ctx: @mut BindGenCtx, cursor: &Cursor) -> bool {
     }
 
     let name = file.name();
+    let name = ::std::str::replace(name, "\\", "/");
     for ctx.match_pat.iter().advance |pat| {
         if name.contains(*pat) {
             return true;
